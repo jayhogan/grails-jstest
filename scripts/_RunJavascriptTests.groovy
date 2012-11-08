@@ -1,8 +1,8 @@
 def testsDir = "${basedir}/test/js"
 def targetDir = "${basedir}/target/test-reports/plain"
-def testResourcesDir = "test/resources/lib"
+def testResourcesDir = "${basedir}/resources/jasmine"
 
-target(runJsTests: 'Runs Jasmine Tests') {
+target(runJasmineTests: 'Runs Jasmine Tests') {
     event("StatusUpdate", ["Starting Jasmine test phase"])
 
     def specsToRun = []
@@ -18,10 +18,8 @@ target(runJsTests: 'Runs Jasmine Tests') {
     specsToRun.each { File testFile ->
         println "Running ${testFile.name}..."
         def outputFile = "${targetDir}/TEST-${testFile.name.replace('-', '').replace('.html', '.xml')}"
-        def ant = new AntBuilder()
-        ant.exec(outputproperty: "cmdOut", errorproperty: "cmdErr", resultproperty: "cmdExit", failonerror: "false", executable: "/usr/bin/env") {
-            arg(line: "DISPLAY=:1")
-            arg(line: "/usr/local/bin/phantomjs")
+        ant.exec(outputproperty: "cmdOut", errorproperty: "cmdErr", resultproperty: "cmdExit", failonerror: "false",
+                executable: "C:/dev/tools/phantomjs-1.7.0/phantomjs.exe", dir: "${basedir}") {
             arg(line: "${testResourcesDir}/phantomjs-jasmine-runner.js")
             arg(line: "${testFile.canonicalPath}")
         }
